@@ -2,6 +2,10 @@ header.bg-cute_purple-100.p-4
     .container.mx-auto.flex.justify-between.items-center 
         h1.text-2xl.text-white.font-extrabold.text-center.text-cute_purple-100 Bienes 
             span.font-normal.text-black Raíces
+               
+        .flex.items-center.gap-4
+            if locals.usuario
+                span.text-white.font-bold Bienvenido: #{locals.usuario.nombre}
 
         nav(class="my-5 text-sm md:flex md:items-center md:gap-3 font-bold text-white hidden") 
             a(href="/mis-propiedades") Mis propiedades 

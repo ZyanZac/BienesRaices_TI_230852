@@ -2,11 +2,13 @@ import Jwt from 'jsonwebtoken'
 import Usuario from '../models/Usuario.js'
 
 const identificarUsuario = async (req, res, next) => {
+    
 
     //identificar si hay un token
     const {_token} = req.cookies
     if (!_token) {
         req.usuario = null
+        res.locals.usuario = null
         return next()
     }
 
@@ -19,6 +21,7 @@ const identificarUsuario = async (req, res, next) => {
         //Almacenar el usuario al req
         if (usuario) {
             req.usuario = usuario
+            res.locals.usuario = usuario
         } 
 
         return next();

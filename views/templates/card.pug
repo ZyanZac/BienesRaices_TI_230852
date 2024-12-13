@@ -8,4 +8,6 @@ div(class="bg-white shadow rounded-lg")
                                 span(class="text-cute_purple-100 font-bold")= propiedad.wc
         p(class="text-sm text-black font-mono") Precio:  
                                 span(class="text-cute_purple-100 font-bold")= propiedad.precio.nombre 
+        p(class="text-sm text-black font-mono") Estado:  
+                                span(class="text-cute_purple-100 font-bold uppercase")= propiedad.tipoOperacion === 'venta' ? 'En Venta' : 'En Renta'
         a(href=`/propiedad/${propiedad.id}` class="bg-cute_purple-100 w-full text-center block font-bold text-white p-2 uppercase rounded") Ver Propiedad          
