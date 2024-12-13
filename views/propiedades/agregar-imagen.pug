@@ -5,8 +5,8 @@ block styles
     meta(name="csrf-token" content= csrfToken)
 block contenido
     .py-10
-        h1.text-4xl.my-10.font-extrabold.text-center Bienes 
-            span.font-normal Raíces  
+        h1.text-4xl.my-10.font-extrabold.text-center.text-cute_purple-100 Bienes 
+            span.font-normal.text-black Raíces  
         h2.text-center.text-2xl.font-extrabold= pagina
 
         div(class="bg-white shadow py-8 px-4 rounded mx-auto max-w-4xl my-10 md:px-10")
@@ -14,7 +14,7 @@ block contenido
                 input(type="hidden" name="_csrf" value= csrfToken)
                 
 
-            button(id="publicar" class="mt-5 w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded text-white font-bold uppercase cursor-pointer" type="button") Publicar Propiedad   
+            button(id="publicar" class="mt-5 w-full py-3 bg-cute_purple-100 hover:bg-cute_purple-200 rounded text-white font-bold uppercase cursor-pointer" type="button") Publicar Propiedad   
 
 block scripts 
     script(src="/js/agregarImagen.js")

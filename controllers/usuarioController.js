@@ -13,8 +13,8 @@ const formularioLogin = (req, res) => {
 
 const autenticar = async (req, res) => {
     //validación
-    await check('email').isEmail().withMessage('El email es obligatorio').run(req)
-    await check('password').notEmpty().withMessage('El password es obligatorio').run(req)
+    await check('email').isEmail().withMessage('El correo es un campo obligatorio').run(req)
+    await check('password').notEmpty().withMessage('La contraseña es un campo obligatorio').run(req)
 
     let resultado = validationResult(req)
 
@@ -34,7 +34,7 @@ const autenticar = async (req, res) => {
 
     if (!usuario) {
         return res.render('auth/login', {
-            pagina: 'Iniciar Sesión',
+            pagina: 'Error al Iniciar Sesión',
             csrfToken: req.csrfToken(),
             errores: [{ msg: 'El usuario no existe' }]
         })
@@ -43,18 +43,18 @@ const autenticar = async (req, res) => {
     //comprobar si el usuario esta confirmado
     if (!usuario.confirmado) {
         return res.render('auth/login', {
-            pagina: 'Iniciar Sesión',
+            pagina: 'Error al Iniciar Sesión',
             csrfToken: req.csrfToken(),
-            errores: [{ msg: 'Tu cuenta no ha sido confirmada' }]
+            errores: [{ msg: 'Tu cuenta no ha sido confirmada, por favor, accede al correo enviado y confirma la cuenta.' }]
         })
     }
 
     //Revisar el password
     if (!usuario.verificarPassword(password)) {
         return res.render('auth/login', {
-            pagina: 'Iniciar Sesión',
+            pagina: 'Error al Iniciar Sesión',
             csrfToken: req.csrfToken(),
-            errores: [{ msg: 'El password es incorrecto' }]
+            errores: [{ msg: 'Tu contraseña es incorrecta' }]
         })
     }
 
@@ -79,7 +79,7 @@ const cerrarSesion = (req, res) => {
 
 const formularioRegistro = (req, res) => {
     res.render('auth/registro', {
-        pagina: 'Crear cuenta',
+        pagina: 'Crear Cuenta',
         csrfToken: req.csrfToken()
     })
 }
@@ -88,10 +88,10 @@ const registrar = async (req, res) => {
     console.log(req.body)
 
     //validación
-    await check('nombre').notEmpty().withMessage('El nombre no puede ir vacio').run(req)
-    await check('email').isEmail().withMessage('Eso no parece un email').run(req)
-    await check('password').isLength({ min: 6 }).withMessage('El password debe ser de almenos 6 caracteres').run(req)
-    await check('repetir_password').equals(req.body.password).withMessage('Los password no coinciden').run(req)
+    await check('nombre').notEmpty().withMessage('El nombre es un campo obligatorio.').run(req)
+    await check('email').isEmail().withMessage('Escribe un correo electrónico en un formato válido. Ej. usuario@dominio.com').run(req)
+    await check('password').isLength({ min: 6 }).withMessage('La contraseña debe ser de mínimo 6 carácteres').run(req)
+    await check('repetir_password').equals(req.body.password).withMessage('Las contraseñas no coinciden').run(req)
 
     let resultado = validationResult(req)
 
@@ -99,7 +99,7 @@ const registrar = async (req, res) => {
     //verificar que el resultado este vacio
     if (!resultado.isEmpty()) {
         return res.render('auth/registro', {
-            pagina: 'Crear cuenta',
+            pagina: 'Crear Cuenta',
             csrfToken: req.csrfToken(),
             errores: resultado.array(),
             usuario: {
@@ -117,9 +117,9 @@ const registrar = async (req, res) => {
     const existeUsuario = await Usuario.findOne({ where: { email } })
     if (existeUsuario) {
         return res.render('auth/registro', {
-            pagina: 'Crear cuenta',
+            pagina: 'Error al Crear Cuenta',
             csrfToken: req.csrfToken(),
-            errores: [{ msg: 'El usuario ya esta Registrado' }],
+            errores: [{ msg: 'Ya existe un usuario registrado con ese correo electrónico.' }],
             usuario: {
                 nombre: req.body.nombre,
                 email: req.body.email
@@ -160,7 +160,7 @@ const confirmar = async (req, res) => {
     if (!usuario) {
         return res.render('auth/confirmar-cuenta', {
             pagina: 'Error al confirmar tu cuenta',
-            mensaje: 'Hubo un error al confirmar tu cuenta, intenta de nuevo',
+            mensaje: 'Hubo un error al confirmar tu cuenta, inténtalo de nuevo',
             error: true
         })
     }
@@ -181,20 +181,20 @@ const confirmar = async (req, res) => {
 
 const formularioOlvidePassword = (req, res) => {
     res.render('auth/olvide-password', {
-        pagina: 'Recupera tu acceso a Bienes Raíces',
+        pagina: 'Recuperación de contraseña',
         csrfToken: req.csrfToken()
     })
 }
 
 const resetPassword = async (req, res) => {
     //validación
-    await check('email').isEmail().withMessage('Eso no parece un email').run(req)
+    await check('email').isEmail().withMessage('Escribe un correo electrónico en un formato válido. Ej. usuario@dominio.com').run(req)
 
     let resultado = validationResult(req)
     //verificar que el resultado este vacio
     if (!resultado.isEmpty()) {
         return res.render('auth/olvide-password', {
-            pagina: 'Recupera tu acceso a Bienes Raíces',
+            pagina: 'Recuperación de contraseña',
             csrfToken: req.csrfToken(),
             errores: resultado.array()
         })
@@ -206,9 +206,9 @@ const resetPassword = async (req, res) => {
 
     if (!usuario) {
         return res.render('auth/olvide-password', {
-            pagina: 'Recupera tu acceso a Bienes Raíces',
+            pagina: 'Error al recuperar la contraseña',
             csrfToken: req.csrfToken(),
-            errores: [{ msg: 'El email no pertenece a ningún usuario' }]
+            errores: [{ msg: 'El correo electrónico no pertenece a ningún usuario' }]
         })
     }
 
@@ -224,8 +224,8 @@ const resetPassword = async (req, res) => {
     })
     //Renderizar un mensaje
     res.render('templates/message', {
-        pagina: 'Restablece tu password',
-        mensaje: 'Hemos enviado un email con las instrucciones'
+        pagina: 'Recuperación de contraseña',
+        mensaje: `Hemos enviado un correo a ${email} para reestablecer la contraseña.`
     })
 
 }
@@ -235,15 +235,15 @@ const comprobarToken = async (req, res) => {
     const usuario = await Usuario.findOne({ where: { token } })
     if (!usuario) {
         return res.render('auth/confirmar-cuenta', {
-            pagina: 'Restablece tu password',
-            mensaje: 'Hubo un error al validar tu informsción, intenta de nuevo',
+            pagina: 'Error al recuperar la contraseña',
+            mensaje: 'Hubo un error al validar tu información, inténtalo de nuevo',
             error: true
         })
     }
 
     //mostrar formulario para modificar el password
     res.render('auth/reset-password', {
-        pagina: 'Restablece tu password',
+        pagina: 'Recuperación de contraseña',
         csrfToken: req.csrfToken()
     })
 
@@ -251,14 +251,14 @@ const comprobarToken = async (req, res) => {
 
 const nuevoPassword = async (req, res) => {
     //validar el password
-    await check('password').isLength({ min: 6 }).withMessage('El password debe ser de almenos 6 caracteres').run(req)
+    await check('password').isLength({ min: 6 }).withMessage('La contraseña debe ser de mínimo 6 caracteres').run(req)
 
     let resultado = validationResult(req)
 
     //verificar que el resultado este vacio
     if (!resultado.isEmpty()) {
         return res.render('auth/reset-password', {
-            pagina: 'Restablece tu password',
+            pagina: 'Crea una nueva contraseña',
             csrfToken: req.csrfToken(),
             errores: resultado.array()
         })
@@ -277,8 +277,8 @@ const nuevoPassword = async (req, res) => {
     await usuario.save();
 
     res.render('auth/confirmar-cuenta', {
-        pagina: 'Password Restablecido',
-        mensaje: 'El password se guardo correctamente'
+        pagina: 'Contraseña reestablecida',
+        mensaje: 'La nueva contraseña se guardó correctamente'
     })
 
 
