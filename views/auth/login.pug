@@ -2,28 +2,40 @@ extends ../layout/index
 
 block contenido
     div.py-10
-        h1.text-4xl.my-10.font-extrabold.text-center Bienes 
-            span.font-normal Raíces  
-        h2.text-center.text-2xl.font-extrabold= pagina
+        h1.text-4xl.my-10.font-extrabold.text-center.text-cute_purple-100 Bienes 
+            span.font-normal.text-black Raíces  
+        h2.text-center.text-2xl.font-extrabold.font-mono= pagina
 
-        if errores 
-            div(class="max-w-md mx-auto my-10")
-                each error in errores
-                    p.bg-red-600.text-white.uppercase.text-xs.text-center.p-2.mb-1.font-bold= error.msg
+         if errores
+            .fixed.top-4.right-4.z-50.flex.flex-col.gap-4#alertContainer
+                each error, index in errores
+                    .flex.w-96.shadow-lg.rounded-lg.animate-fade-in-right.transition-opacity.duration-150.ease-out(class="alert-item" data-alert-id=index)
+                        .bg-cute_purple-100.py-4.px-6.rounded-l-lg.flex.items-center
+                            svg(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="fill-current text-white" width="20" height="20")
+                                path(fill-rule="evenodd" d="M8.22 1.754a.25.25 0 00-.44 0L1.698 13.132a.25.25 0 00.22.368h12.164a.25.25 0 00.22-.368L8.22 1.754zm-1.763-.707c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0114.082 15H1.918a1.75 1.75 0 01-1.543-2.575L6.457 1.047zM9 11a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z")
+                        .px-4.py-6.bg-white.rounded-r-lg.flex.justify-between.items-center.w-full.border.border-l-transparent.border-cute_purple-100
+                            p.bg-white.text-black.uppercase.text-xs.text-center.p-2.mb-1.font-bold= error.msg
+                            button(
+                                class="close-alert transition duration-150 hover:scale-110"
+                                data-alert-id=index
+                            )
+                                svg(xmlns="http://www.w3.org/2000/svg" class="fill-current text-black" viewBox="0 0 16 16" width="20" height="20")
+                                    path(fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z")
+
 
         .mt-8.mx-auto.max-w-md 
             .bg-white.py-8.px-4.shadow
                 form.space-y-5( method="POST" action="/auth/login") 
                     input(type="hidden" name="_csrf" value= csrfToken)
                     div 
-                        label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="email") Email
-                        input#email.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Escribe tu email" type="email" name="email") 
+                        label.block.text-m.uppercase.text-cute_purple-100.mb-3.font-bold.font-mono(for="email") Correo Electrónico:
+                        input#email.w-full.px-3.py-2.border.border-cute_purple-100.rounded-md.placeholder-cute_purple-300(placeholder="Ej. usuario@dominio.com" type="email" name="email") 
                     div 
-                        label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="password") Password
-                        input#password.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Escribe tu password" type="password" name="password")             
+                        label.block.text-m.uppercase.text-cute_purple-100.mb-3.font-bold.font-mono(for="password") Contraseña:
+                        input#password.w-full.px-3.py-2.border.border-cute_purple-100.rounded-md.placeholder-cute_purple-300(placeholder="Escribe tu contraseña." type="password" name="password")             
                     div.flex.items-center.justify-between 
-                        a.text-gray-500.text-xs(href="/auth/registro") ¿No tienes cuenta? Crea una
-                        a.text-gray-500.text-xs(href="/auth/olvide-password") Olvide mi Password
+                        a.text-cute_purple-100.text-xs(href="/auth/registro") ¿No tienes cuenta? Crear cuenta.
+                        a.text-cute_purple-100.text-xs(href="/auth/olvide-password") Olvidé mi contraseña
 
 
-                    input(class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 cursor-pointer" type="submit" value="Inicar Sesión")    
+                    input(class="w-full bg-cute_purple-100 hover:bg-cute_purple-200 text-white font-bold py-3 cursor-pointer" type="submit" value="Inicar Sesión")    
