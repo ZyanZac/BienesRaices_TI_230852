@@ -3,7 +3,7 @@ import { Sequelize } from 'sequelize'
 
 const inicio = async (req, res) => {
 
-    const [categorias, precios, casas, departamentos] = await Promise.all([
+    const [categorias, precios, casas, departamentos, establecimientos] = await Promise.all([
         Categoria.findAll({ raw: true }),
         Precio.findAll({ raw: true }),
         Propiedad.findAll({
@@ -24,7 +24,7 @@ const inicio = async (req, res) => {
         Propiedad.findAll({
             limit: 3,
             where: {
-                categoriaID: 2
+                categoriaID: 3
             },
             include: [
                 {
@@ -44,6 +44,7 @@ const inicio = async (req, res) => {
         precios,
         casas,
         departamentos,
+        establecimientos,
         csrfToken: req.csrfToken()
     })
 }

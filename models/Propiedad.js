@@ -48,9 +48,12 @@ const Propiedad = db.define('propiedades', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
+    },
+    tipoOperacion: {
+        type: DataTypes.ENUM('venta', 'renta'),
+        allowNull: false,
+        defaultValue: 'venta'
     }
-
-
 });
 
 export default Propiedad

@@ -736,10 +736,6 @@ video {
   --tw-border-opacity: 1;
   border-color: rgb(87 50 128 / var(--tw-border-opacity));
 }
-.border-gray-300 {
-  --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity));
-}
 .border-cute_purple-200 {
   --tw-border-opacity: 1;
   border-color: rgb(157 141 241 / var(--tw-border-opacity));
@@ -755,10 +751,6 @@ video {
 .bg-cute_purple-300 {
   --tw-bg-opacity: 1;
   background-color: rgb(184 205 248 / var(--tw-bg-opacity));
-}
-.bg-red-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(220 38 38 / var(--tw-bg-opacity));
 }
 .bg-white {
   --tw-bg-opacity: 1;
@@ -897,41 +889,13 @@ video {
   --tw-text-opacity: 1;
   color: rgb(87 50 128 / var(--tw-text-opacity));
 }
-.text-gray-500 {
-  --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity));
-}
-.text-white {
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
-}
 .text-cute_purple-200 {
   --tw-text-opacity: 1;
   color: rgb(157 141 241 / var(--tw-text-opacity));
 }
-.placeholder-gray-400::-moz-placeholder {
-  --tw-placeholder-opacity: 1;
-  color: rgb(156 163 175 / var(--tw-placeholder-opacity));
-}
-.placeholder-gray-400::placeholder {
-  --tw-placeholder-opacity: 1;
-  color: rgb(156 163 175 / var(--tw-placeholder-opacity));
-}
-.placeholder-cute_purple-100::-moz-placeholder {
-  --tw-placeholder-opacity: 1;
-  color: rgb(87 50 128 / var(--tw-placeholder-opacity));
-}
-.placeholder-cute_purple-100::placeholder {
-  --tw-placeholder-opacity: 1;
-  color: rgb(87 50 128 / var(--tw-placeholder-opacity));
-}
-.placeholder-cute_purple-300::-moz-placeholder {
-  --tw-placeholder-opacity: 1;
-  color: rgb(184 205 248 / var(--tw-placeholder-opacity));
-}
-.placeholder-cute_purple-300::placeholder {
-  --tw-placeholder-opacity: 1;
-  color: rgb(184 205 248 / var(--tw-placeholder-opacity));
+.text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 .placeholder-cute_purple-200::-moz-placeholder {
   --tw-placeholder-opacity: 1;
@@ -940,6 +904,14 @@ video {
 .placeholder-cute_purple-200::placeholder {
   --tw-placeholder-opacity: 1;
   color: rgb(157 141 241 / var(--tw-placeholder-opacity));
+}
+.placeholder-cute_purple-300::-moz-placeholder {
+  --tw-placeholder-opacity: 1;
+  color: rgb(184 205 248 / var(--tw-placeholder-opacity));
+}
+.placeholder-cute_purple-300::placeholder {
+  --tw-placeholder-opacity: 1;
+  color: rgb(184 205 248 / var(--tw-placeholder-opacity));
 }
 .shadow {
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);

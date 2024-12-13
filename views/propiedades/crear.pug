@@ -55,6 +55,16 @@ block contenido
                                 option(value="") - Seleccione -
                                 each precio in precios 
                                     option(value=precio.id selected= datos.precio ? datos.precio == precio.id ? true : false : null)= precio.nombre
+
+                                    div(class="md:flex md:gap-4 space-y-5 md:space-y-0")
+                                    
+                    div(class="md:w-1/2")
+                        label.block.text-sm.uppercase.text-cute_purple-100.mb-3.font-bold(for="tipoOperacion") Tipo de Operación
+                        select#tipoOperacion.w-full.px-3.py-2.border.border-cute_purple-100.rounded-md.placeholder-cute_purple-300.bg-cute_purple-300(name="tipoOperacion")
+                            option(value="") - Seleccione -
+                            option(value="venta" selected= datos.tipoOperacion === 'venta') Venta
+                            option(value="renta" selected= datos.tipoOperacion === 'renta') Renta
+
             
                     div(class="md:flex md:gap-4 space-y-5 md:space-y-0")
                         div(class="md:w-1/3") 

@@ -49,6 +49,7 @@ const admin = async (req, res) => {
             total,
             offset,
             limit,
+            usuario: req.usuario
         })
 
     } catch (error) {
@@ -71,7 +72,8 @@ const crear = async (req, res) => {
         csrfToken: req.csrfToken(),
         categorias,
         precios,
-        datos: {}
+        datos: {},
+        usuario: req.usuario
     })
 }
 
@@ -91,14 +93,15 @@ const guardar = async (req, res) => {
             categorias,
             precios,
             errores: resultado.array(),
-            datos: req.body
+            datos: req.body,
+            usuario: req.usuario
         })
 
 
     }
 
     //Crear registro
-    const { titulo, descripcion, habitaciones, estacionamiento, wc, calle, lat, lng, precio: precioID, categoria: categoriaID } = req.body
+    const { titulo, descripcion, habitaciones, estacionamiento, wc, calle, lat, lng, precio: precioID, categoria: categoriaID, tipoOperacion } = req.body
 
     const { id: usuarioID } = req.usuario
     try {
@@ -113,6 +116,7 @@ const guardar = async (req, res) => {
             lng,
             precioID,
             categoriaID,
+            tipoOperacion,
             usuarioID,
             imagen: ''
         })
@@ -265,7 +269,7 @@ const guardarCambios = async (req, res) => {
     //Rescribir el objeto y actualizar la bd
 
     try {
-        const { titulo, descripcion, habitaciones, estacionamiento, wc, calle, lat, lng, precio: precioID, categoria: categoriaID } = req.body
+        const { titulo, descripcion, habitaciones, estacionamiento, wc, calle, lat, lng, precio: precioID, categoria: categoriaID, tipoOperacion } = req.body
 
         propiedad.set({
             titulo,
@@ -277,7 +281,8 @@ const guardarCambios = async (req, res) => {
             lat,
             lng,
             precioID,
-            categoriaID
+            categoriaID,
+            tipoOperacion
         })
 
         await propiedad.save();
