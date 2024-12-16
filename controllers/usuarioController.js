@@ -94,11 +94,11 @@ const registrar = async (req, res) => {
 
     //validación
     await check('nombre').notEmpty().withMessage('El nombre es un campo obligatorio.').run(req)
-    await check('email').isEmail().withMessage('Escribe un correo electrónico en un formato válido. Ej. usuario@dominio.com').run(req)
-    await check('password').isLength({ min: 6 }).withMessage('La contraseña debe ser de mínimo 6 carácteres').run(req)
-    await check('repetir_password').equals(req.body.password).withMessage('Las contraseñas no coinciden').run(req)
+    await check('email').notEmpty().withMessage('El correo es un campo obligatorio.').isEmail().withMessage('Escribe un correo electrónico en un formato válido. Ej. usuario@dominio.com').run(req)
+    await check('password').notEmpty().withMessage('La contraseña es un campo obligatorio.').isLength({ min: 6 }).withMessage('La contraseña debe ser de mínimo 6 carácteres').run(req)
+    await check('repetir_password').notEmpty().withMessage('La confirmación de la contraseña es un campo obligatorio.').equals(req.body.password).withMessage('Las contraseñas no coinciden').run(req)
     await check('fechaNacimiento')
-        .notEmpty().withMessage('La fecha de nacimiento es obligatoria')
+        .notEmpty().withMessage('La fecha de nacimiento es un campo obligatorio')
         .custom((value) => {
             const fechaNacimiento = new Date(value)
             const hoy = new Date()
@@ -228,7 +228,7 @@ const formularioOlvidePassword = (req, res) => {
 
 const resetPassword = async (req, res) => {
     //validación
-    await check('email').isEmail().withMessage('Escribe un correo electrónico en un formato válido. Ej. usuario@dominio.com').run(req)
+    await check('email').notEmpty().withMessage('El correo es un campo obligatorio.').isEmail().withMessage('Escribe un correo electrónico en un formato válido. Ej. usuario@dominio.com').run(req)
 
     let resultado = validationResult(req)
     //verificar que el resultado este vacio
@@ -291,7 +291,7 @@ const comprobarToken = async (req, res) => {
 
 const nuevoPassword = async (req, res) => {
     //validar el password
-    await check('password').isLength({ min: 6 }).withMessage('La contraseña debe ser de mínimo 6 caracteres').run(req)
+    await check('password').notEmpty().withMessage('La contraseña es un campo obligatorio.').isLength({ min: 6 }).withMessage('La contraseña debe ser de mínimo 6 caracteres').run(req)
 
     let resultado = validationResult(req)
 

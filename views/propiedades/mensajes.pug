@@ -7,9 +7,8 @@ block contenido
             ul(class="divide-y divide-cute_purple-100")
                 each mensaje in mensajes
                     li(class="p-5")
-                        //- Contenedor principal con grid para mejor alineación
                         div(class="grid grid-cols-[auto,1fr] gap-4")
-                            //- Contenedor de la imagen
+                            //- Avatar
                             div(class="pt-1")
                                 if mensaje.usuario.imagen
                                     img(
@@ -24,8 +23,9 @@ block contenido
                                         class="w-10 h-10 rounded-full object-cover border-2 border-cute_purple-100"
                                     )
                             
-                            //- Contenedor de la información
+                            //- Contenido
                             div(class="space-y-2")
+                                //- Información del mensaje
                                 p(class="text-cute_purple-100 font-mono") 
                                     span(class="font-bold") Nombre: 
                                     span(class="font-normal")= mensaje.usuario.nombre
@@ -38,8 +38,42 @@ block contenido
                                 p(class="text-cute_purple-100 font-mono text-sm") 
                                     span(class="font-bold") Enviado: 
                                     span(class="font-normal")= formatearFecha(mensaje.createdAt)
+
+                                //- Mostrar respuesta existente si hay
+                                if mensaje.respuesta
+                                    div(class="mt-4 bg-gray-50 p-3 rounded-lg")
+                                        p(class="text-cute_purple-100 font-mono") 
+                                            span(class="font-bold") Tu respuesta:
+                                            span(class="font-normal block mt-1")= mensaje.respuesta
+
+                                //- Formulario de respuesta (solo si no hay respuesta)
+                                if !mensaje.respuesta
+                                    form(
+                                        method="POST" 
+                                        action=`/propiedades/responder-mensaje/${mensaje.id}`
+                                        class="mt-4 space-y-3"
+                                    )
+                                        input(type="hidden" name="_csrf" value= csrfToken)
+                                        
+                                        div
+                                            label(
+                                                for=`respuesta-${mensaje.id}`
+                                                class="block text-sm text-cute_purple-100 font-bold uppercase mb-2"
+                                            ) Responder:
+                                            textarea(
+                                                id=`respuesta-${mensaje.id}`
+                                                name="respuesta"
+                                                class="w-full px-3 py-2 border border-cute_purple-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-cute_purple-100"
+                                                placeholder="Escribe tu respuesta aquí"
+                                                rows="3"
+                                            )
+                                        input(
+                                            type="submit"
+                                            value="Enviar Respuesta"
+                                            class="bg-cute_purple-100 text-white font-bold uppercase text-sm w-full sm:w-auto px-6 py-2 cursor-pointer rounded-lg hover:bg-cute_purple-200 transition-colors"
+                                        )
         else
-            p(class="text-center text-cute_purple-100 p-5 font-mono") No hay Mensajes  
+            p(class="text-center text-cute_purple-100 p-5 font-mono") No hay Mensajes
 
 
 

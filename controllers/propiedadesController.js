@@ -2,6 +2,7 @@ import { validationResult } from 'express-validator'
 import { Precio, Categoria, Propiedad, Mensaje, Usuario } from '../models/index.js'
 import { unlink } from 'node:fs/promises'
 import { esVendedor, formatearFecha } from '../helpers/index.js'
+import { emailRespuestaMensaje } from '../helpers/emails.js';
 
 const admin = async (req, res) => {
 
@@ -458,9 +459,54 @@ const verMensajes = async (req, res) => {
     res.render('propiedades/mensajes', {
         pagina: 'Mensajes',
         mensajes: propiedad.mensajes,
-        formatearFecha
+        formatearFecha,
+        csrfToken: req.csrfToken()
     })
 }
+
+const responderMensaje = async (req, res) => {
+    const { id } = req.params;
+    const { respuesta } = req.body;
+
+    const mensaje = await Mensaje.findOne({
+        where: { id },
+        include: [
+            {
+                model: Propiedad,
+                as: 'propiedad',
+                where: { usuarioID: req.usuario.id }
+            },
+            {
+                model: Usuario,
+                as: 'usuario',
+                scope: 'eliminarPassword'
+            }
+        ]
+    });
+
+    if(!mensaje) {
+        return res.redirect('/mis-propiedades');
+    }
+
+    try {
+        mensaje.respuesta = respuesta;
+        await mensaje.save();
+        
+        // Enviar email de notificación
+        await emailRespuestaMensaje({
+            email: mensaje.usuario.email,
+            nombre: mensaje.usuario.nombre,
+            mensaje: mensaje.mensaje,
+            respuesta: respuesta,
+            propiedad: mensaje.propiedad.titulo
+        });
+
+        res.redirect(`/propiedades/mensajes/${mensaje.propiedadID}`);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 export {
     admin,
@@ -474,6 +520,7 @@ export {
     mostrarPropiedad,
     enviarMensaje,
     verMensajes,
-    cambiarEstado
+    cambiarEstado,
+    responderMensaje
 }
 

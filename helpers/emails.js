@@ -199,4 +199,79 @@ const emailOlvidePassword = async (datos) => {
 
 }
 
-export { emailRegistro, emailOlvidePassword }
+
+const emailRespuestaMensaje = async (datos) => {
+  const transport = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
+      }
+  });
+
+  const { email, nombre, mensaje, respuesta, propiedad } = datos
+
+  await transport.sendMail({
+      from: 'BienesRaices.com',
+      to: email,
+      subject: 'Respuesta a tu mensaje en BienesRaices.com',
+      text: 'Has recibido una respuesta a tu mensaje en BienesRaices.com',
+      html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      </head>
+      <body style="margin: 0; padding: 20px; background-color: #f6f6f6; font-family: Arial, sans-serif;">
+          <table cellpadding="0" cellspacing="0" style="max-width: 600px; width: 100%; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              <tr>
+                  <td style="padding: 40px;">
+                      <h1 style="color: #573280; font-size: 24px; margin: 0 0 20px;">
+                          Hola ${nombre}
+                      </h1>
+                      
+                      <h2 style="color: #9D8DF1; font-size: 20px; margin: 0 0 30px;">
+                          Has recibido una respuesta a tu mensaje
+                      </h2>
+                      
+                      <div style="background-color: #f8f8f8; border-radius: 5px; padding: 20px; margin: 20px 0;">
+                          <p style="color: #666666; font-size: 16px; margin: 0 0 15px;">
+                              <strong>Tu mensaje:</strong><br>
+                              ${mensaje}
+                          </p>
+                      </div>
+
+                      <div style="background-color: #f0f7ff; border-radius: 5px; padding: 20px; margin: 20px 0;">
+                          <p style="color: #666666; font-size: 16px; margin: 0 0 15px;">
+                              <strong>Respuesta:</strong><br>
+                              ${respuesta}
+                          </p>
+                      </div>
+                      
+                      <p style="color: #666666; font-size: 16px; line-height: 1.6; margin: 30px 0;">
+                          Esta respuesta es referente a la propiedad: ${propiedad}
+                      </p>
+                      
+                      <div style="border-top: 1px solid #eeeeee; padding-top: 20px; margin-top: 40px;">
+                          <table style="width: 100%;">
+                              <tr>
+                                  <td style="text-align: center;">
+                                      <p style="color: #9D8DF1; font-weight: bold; margin: 0;">
+                                          Equipo de Bienes Raíces
+                                      </p>
+                                  </td>
+                              </tr>
+                          </table>
+                      </div>
+                  </td>
+              </tr>
+          </table>
+      </body>
+      </html>`
+  });
+}
+
+
+export { emailRegistro, emailOlvidePassword, emailRespuestaMensaje }

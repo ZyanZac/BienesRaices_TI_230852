@@ -26,7 +26,7 @@ block contenido
                                         </svg>
                                         = propiedad.precio.nombre
 
-                                    a(href=`/mensajes/${propiedad.id}` class="text-sm text-cute_purple-100")= `${propiedad.mensajes.length} Mensajes` 
+                                    a(href=`/propiedades/mensajes/${propiedad.id}` class="text-sm text-cute_purple-100")= `${propiedad.mensajes.length} Mensajes` 
 
                                 div(class="sm:w-1/4 md:w-2/6 lg:w-1/6 flex flex-col  2xl:flex-row gap-2")
                                     button(type="button" data-propiedad-id=`${propiedad.id}` class=`cambiar-estado w-full px-2 py-2 md:py-1 text-xs leading-5 font-semibold rounded cursor-pointer ${propiedad.publicado ? 'bg-cute_purple-100 text-white' : 'bg-cute_purple-200 text-white'}`)= value=`${propiedad.publicado ? 'Publicado' : 'No Publicado'}`
