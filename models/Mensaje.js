@@ -5,6 +5,10 @@ const Mensaje = db.define('mensajes', {
    mensaje: {
       type: DataTypes.STRING(200),
       allowNull: false
+   },
+   respuesta: {
+       type: DataTypes.TEXT,
+       allowNull: true
    }
 
 });

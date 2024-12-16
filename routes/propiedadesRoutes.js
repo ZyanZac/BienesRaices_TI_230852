@@ -1,6 +1,6 @@
 import express from 'express'
 import { body } from 'express-validator'
-import { admin, crear, guardar, agregarImagen, almacenarImagen, editar, guardarCambios, eliminar, mostrarPropiedad, enviarMensaje, verMensajes, cambiarEstado } from '../controllers/propiedadesController.js'
+import { admin, crear, guardar, agregarImagen, almacenarImagen, editar, guardarCambios, eliminar, mostrarPropiedad, enviarMensaje, verMensajes, cambiarEstado, responderMensaje } from '../controllers/propiedadesController.js'
 import protegerRuta from '../middleware/protegerRuta.js'
 import upload from '../middleware/subirImagen.js'
 import identificarUsuario from '../middleware/identificarUsuario.js'
@@ -72,9 +72,21 @@ router.post('/propiedad/:id',
     body('mensaje').isLength({ min: 10 }).withMessage('El Mensaje no puede ir vacio o es muy corto'),
     enviarMensaje)
 
-router.get('/mensajes/:id',
+/*router.get('/mensajes/:id',
     protegerRuta,
     verMensajes
+)*/
+
+router.get('/propiedades/mensajes/:id',
+    protegerRuta,
+    verMensajes
+)
+
+
+router.post('/propiedades/responder-mensaje/:id',
+    protegerRuta,
+    body('respuesta').notEmpty().withMessage('La respuesta no puede ir vacía'),
+    responderMensaje
 )
 
 export default router
