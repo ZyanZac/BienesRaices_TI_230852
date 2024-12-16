@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import Usuario from '../models/Usuario.js'
 import { generateID, generarJWT } from '../helpers/tokens.js'
 import { emailRegistro, emailOlvidePassword } from '../helpers/emails.js'
+import upload from '../middleware/subirImagen.js'
 
 const formularioLogin = (req, res) => {
     res.render('auth/login', {
@@ -59,7 +60,11 @@ const autenticar = async (req, res) => {
     }
 
     //Autenticar al usuario
-    const token = generarJWT({ id: usuario.id, nombre: usuario.nombre });
+    const token = generarJWT(
+        { id: usuario.id, 
+            nombre: usuario.nombre, 
+            imagen: usuario.imagen
+        });
 
     console.log(token);
 
@@ -92,6 +97,23 @@ const registrar = async (req, res) => {
     await check('email').isEmail().withMessage('Escribe un correo electrónico en un formato válido. Ej. usuario@dominio.com').run(req)
     await check('password').isLength({ min: 6 }).withMessage('La contraseña debe ser de mínimo 6 carácteres').run(req)
     await check('repetir_password').equals(req.body.password).withMessage('Las contraseñas no coinciden').run(req)
+    await check('fechaNacimiento')
+        .notEmpty().withMessage('La fecha de nacimiento es obligatoria')
+        .custom((value) => {
+            const fechaNacimiento = new Date(value)
+            const hoy = new Date()
+            const edad = hoy.getFullYear() - fechaNacimiento.getFullYear()
+            const mes = hoy.getMonth() - fechaNacimiento.getMonth()
+            
+            if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+                edad--
+            }
+            
+            if (edad < 18) {
+                throw new Error('Debes ser mayor de edad para registrarte')
+            }
+            return true
+        }).run(req)
 
     let resultado = validationResult(req)
 
@@ -104,14 +126,23 @@ const registrar = async (req, res) => {
             errores: resultado.array(),
             usuario: {
                 nombre: req.body.nombre,
-                email: req.body.email
+                email: req.body.email,
+                fechaNacimiento: req.body.fechaNacimiento
             }
         })
     }
 
     //Extraer los datos
 
-    const { nombre, email, password } = req.body
+    
+
+    
+    const { nombre, email, password, fechaNacimiento } = req.body
+    let imagen = req.body.imagen
+
+    if (!imagen) {
+        imagen = 'default-profile.png'
+    }
 
     //verificar que el usuario no este duplicado
     const existeUsuario = await Usuario.findOne({ where: { email } })
@@ -122,9 +153,16 @@ const registrar = async (req, res) => {
             errores: [{ msg: 'Ya existe un usuario registrado con ese correo electrónico.' }],
             usuario: {
                 nombre: req.body.nombre,
-                email: req.body.email
+                email: req.body.email,
+                fechaNacimiento: req.body.fechaNacimiento
             }
         })
+    }
+
+    //let imagen = 'default-profile.png'
+    if (req.file) {
+        console.log('Archivo subido:', req.file);
+        imagen = req.file.filename
     }
 
     //Almacenar un usuario
@@ -132,6 +170,8 @@ const registrar = async (req, res) => {
         nombre,
         email,
         password,
+        fechaNacimiento,
+        imagen: imagen || 'default-profile.png',
         token: generateID()
     })
 
@@ -280,9 +320,87 @@ const nuevoPassword = async (req, res) => {
         pagina: 'Contraseña reestablecida',
         mensaje: 'La nueva contraseña se guardó correctamente'
     })
-
-
 }
+
+
+const perfil = async (req, res) => {
+    const { usuario } = req
+    
+    res.render('auth/perfil', {
+        pagina: 'Mi Perfil',
+        csrfToken: req.csrfToken(),
+        usuario
+    })
+}
+
+const actualizarPerfil = async (req, res) => {
+    try {
+        // Validaciones
+        await check('nombre').notEmpty().withMessage('El nombre es obligatorio').run(req)
+        await check('email').isEmail().withMessage('Formato de email inválido').run(req)
+
+        let resultado = validationResult(req)
+        if (!resultado.isEmpty()) {
+            return res.render('auth/perfil', {
+                pagina: 'Mi Perfil',
+                usuario: req.usuario,
+                errores: resultado.array(),
+                csrfToken: req.csrfToken()
+            })
+        }
+
+        // Verificar que el email no existe
+        const { nombre, email, imagen } = req.body
+        
+        // Debug para ver qué valores llegan
+        console.log('Datos recibidos:', { nombre, email, imagen })
+
+        const usuario = await Usuario.findByPk(req.usuario.id)
+
+        if (email !== usuario.email) {
+            const existeEmail = await Usuario.findOne({ where: { email }})
+            if (existeEmail) {
+                return res.render('auth/perfil', {
+                    pagina: 'Mi Perfil',
+                    usuario: req.usuario,
+                    errores: [{msg: 'El email ya está en uso'}],
+                    csrfToken: req.csrfToken()
+                })
+            }
+        }
+
+        // Actualizar usuario
+        usuario.nombre = nombre
+        usuario.email = email
+
+        // Si hay una nueva imagen, actualizarla
+        if (imagen && imagen !== usuario.imagen) {
+            console.log('Actualizando imagen:', imagen)
+            usuario.imagen = imagen
+        }
+
+        // Debug para ver qué se va a guardar
+        console.log('Usuario a guardar:', usuario.toJSON())
+
+        await usuario.save()
+        
+        // Debug para confirmar que se guardó
+        console.log('Usuario guardado:', usuario.toJSON())
+
+        // Redireccionar con mensaje de éxito
+        res.redirect('/auth/perfil')
+
+    } catch (error) {
+        console.log(error)
+        return res.render('auth/perfil', {
+            pagina: 'Mi Perfil',
+            usuario: req.usuario,
+            errores: [{msg: 'Error al actualizar el perfil'}],
+            csrfToken: req.csrfToken()
+        })
+    }
+}
+
 
 export {
     formularioLogin,
@@ -294,5 +412,7 @@ export {
     formularioOlvidePassword,
     resetPassword,
     comprobarToken,
-    nuevoPassword
+    nuevoPassword,
+    perfil,
+    actualizarPerfil
 }

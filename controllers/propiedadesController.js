@@ -357,7 +357,12 @@ const mostrarPropiedad = async (req, res) => {
     const propiedad = await Propiedad.findByPk(id, {
         include: [
             { model: Precio, as: 'precio' },
-            { model: Categoria, as: 'categoria' }
+            { model: Categoria, as: 'categoria' },
+            { 
+                model: Usuario.scope('eliminarPassword'), 
+                as: 'usuario',
+                attributes: ['nombre', 'email', 'imagen']
+            }
         ]
     })
 

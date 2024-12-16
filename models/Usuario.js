@@ -12,6 +12,14 @@ const Usuario = db.define('usuarios', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    fechaNacimiento: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+    },
+    imagen: {
+        type: DataTypes.STRING,
+        defaultValue: 'default-profile.png'
+    },
     password: {
         type: DataTypes.STRING,
         allowNull: false
